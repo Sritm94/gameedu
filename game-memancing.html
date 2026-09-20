@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎣 Memancing di Laut - Makhluk Hidup & Lingkungannya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background: linear-gradient(180deg, #87CEEB 0%, #4A90D9 40%, #1a5276 60%, #0d3b66 100%);
+        }
+
+        /* Start Screen */
+        #startScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1a237e 0%, #0d47a1 50%, #01579b 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            color: white;
+            text-align: center;
+        }
+
+        #startScreen h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        #startScreen h2 {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            color: #FFD700;
+        }
+
+        #startScreen .rules {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            text-align: left;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        #startScreen .rules h3 {
+            color: #FFD700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        #startScreen .rules ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #startScreen .rules ul li {
+            padding: 5px 0;
+            font-size: 0.95em;
+        }
+
+        #startScreen .rules ul li::before {
+            content: "🐟 ";
+        }
+
+        .btn-start {
+            padding: 15px 50px;
+            font-size: 1.3em;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            border: none;
+            border-radius: 50px;
+            color: #1a237e;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255,215,0,0.4);
+        }
+
+        .btn-start:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(255,215,0,0.6);
+        }
+
+        /* Game Screen */
+        #gameScreen {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Sky */
+        .sky {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 45%;
+            background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 100%);
+        }
+
+        .sun {
+            position: absolute;
+            top: 30px;
+            right: 80px;
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, #FFD700, #FFA500);
+            border-radius: 50%;
+            box-shadow: 0 0 40px #FFD700, 0 0 80px rgba(255,215,0,0.3);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .clouds {
+            position: absolute;
+            top: 50px;
+            left: 10%;
+            width: 120px;
+            height: 40px;
+            background: white;
+            border-radius: 50px;
+            opacity: 0.8;
+            animation: moveClouds 20s linear infinite;
+        }
+
+        .clouds::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .clouds2 {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            width: 100px;
+            height: 35px;
+            background: white;
+            border-radius: 50px;
+            opacity: 0.7;
+            animation: moveClouds 25s linear infinite reverse;
+        }
+
+        .clouds2::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 25px;
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        @keyframes moveClouds {
+            0% { transform: translateX(-200px); }
+            100% { transform: translateX(calc(100vw + 200px)); }
+        }
+
+        /* Sea */
+        .sea {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 55%;
+            background: linear-gradient(180deg, #1a8fc4 0%, #0e6b9e 30%, #0a4d73 60%, #063552 100%);
+            overflow: hidden;
+        }
+
+        .wave {
+            position: absolute;
+            top: -15px;
+            left: 0;
+            width: 200%;
+            height: 30px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 30'%3E%3Cpath d='M0,15 Q150,0 300,15 Q450,30 600,15 Q750,0 900,15 Q1050,30 1200,15' fill='none' stroke='%231a8fc4' stroke-width='3'/%3E%3C/svg%3E") repeat-x;
+            animation: waves 4s linear infinite;
+        }
+
+        @keyframes waves {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Ship */
+        .ship-container {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            transition: transform 0.1s;
+        }
+
+        .ship-container.shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .ship-container.sink {
+            animation: sink 3s ease-in forwards;
+        }
+
+        .ship-container.win {
+            animation: celebrate 1s ease-in-out infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(-50%) rotate(0deg); }
+            10% { transform: translateX(-50%) rotate(-5deg) translateY(-5px); }
+            20% { transform: translateX(-50%) rotate(5deg) translateY(5px); }
+            30% { transform: translateX(-50%) rotate(-5deg) translateY(-3px); }
+            40% { transform: translateX(-50%) rotate(5deg) translateY(3px); }
+            50% { transform: translateX(-50%) rotate(-3deg); }
+            60% { transform: translateX(-50%) rotate(3deg); }
+            70% { transform: translateX(-50%) rotate(-2deg); }
+            80% { transform: translateX(-50%) rotate(2deg); }
+            90% { transform: translateX(-50%) rotate(-1deg); }
+        }
+
+        @keyframes sink {
+            0% { transform: translateX(-50%) rotate(0deg) translateY(0); opacity: 1; }
+            30% { transform: translateX(-50%) rotate(15deg) translateY(20px); }
+            60% { transform: translateX(-50%) rotate(25deg) translateY(80px); opacity: 0.7; }
+            100% { transform: translateX(-50%) rotate(35deg) translateY(300px); opacity: 0; }
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
+            50% { transform: translateX(-50%) translateY(-10px) scale(1.05); }
+        }
+
+        .ship {
+            width: 180px;
+            height: 120px;
+            position: relative;
+        }
+
+        .ship-body {
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            width: 160px;
+            height: 50px;
+            background: linear-gradient(180deg, #8B4513, #654321);
+            border-radius: 0 0 30px 30px;
+            clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+        }
+
+        .ship-cabin {
+            position: absolute;
+            bottom: 45px;
+            left: 50px;
+            width: 80px;
+            height: 40px;
+            background: linear-gradient(180deg, #D2691E, #A0522D);
+            border-radius: 5px 5px 0 0;
+        }
+
+        .ship-cabin::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            width: 20px;
+            height: 20px;
+            background: #87CEEB;
+            border: 2px solid #654321;
+            border-radius: 3px;
+        }
+
+        .ship-cabin::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            width: 20px;
+            height: 20px;
+            background: #87CEEB;
+            border: 2px solid #654321;
+            border-radius: 3px;
+        }
+
+        .ship-mast {
+            position: absolute;
+            bottom: 80px;
+            left: 88px;
+            width: 4px;
+            height: 60px;
+            background: #654321;
+        }
+
+        .ship-flag {
+            position: absolute;
+            bottom: 120px;
+            left: 92px;
+            width: 30px;
+            height: 20px;
+            background: #FF4444;
+            clip-path: polygon(0 0, 100% 25%, 0 50%);
+            animation: flagWave 1s ease-in-out infinite;
+        }
+
+        @keyframes flagWave {
+            0%, 100% { transform: skewY(0deg); }
+            50% { transform: skewY(3deg); }
+        }
+
+        .fishing-rod {
+            position: absolute;
+            bottom: 50px;
+            right: -20px;
+            width: 80px;
+            height: 3px;
+            background: #654321;
+            transform: rotate(-30deg);
+            transform-origin: left center;
+        }
+
+        .fishing-line {
+            position: absolute;
+            bottom: -60px;
+            right: -18px;
+            width: 1px;
+            height: 60px;
+            background: #999;
+            transform: rotate(-30deg);
+        }
+
+        .fishing-hook {
+            position: absolute;
+            bottom: -70px;
+            right: -18px;
+            width: 10px;
+            height: 10px;
+            border: 2px solid #C0C0C0;
+            border-radius: 0 0 50% 50%;
+            border-top: none;
+        }
+
+        /* Big Ship (reward) */
+        .big-ship {
+            display: none;
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .big-ship .ship-body {
+            width: 250px;
+            height: 70px;
+            background: linear-gradient(180deg, #DAA520, #B8860B);
+        }
+
+        .big-ship .ship-cabin {
+            width: 120px;
+            height: 60px;
+            left: 60px;
+            bottom: 65px;
+            background: linear-gradient(180deg, #FFD700, #DAA520);
+        }
+
+        .big-ship .ship-mast {
+            height: 90px;
+            bottom: 120px;
+            left: 118px;
+        }
+
+        .big-ship .ship-flag {
+            bottom: 190px;
+            left: 122px;
+            width: 40px;
+            height: 25px;
+            background: #FFD700;
+        }
+
+        /* Fish animation */
+        .fish-caught {
+            position: absolute;
+            font-size: 2em;
+            animation: fishJump 1.5s ease-out forwards;
+            z-index: 20;
+        }
+
+        @keyframes fishJump {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            30% { transform: translateY(-50px) scale(1.2); opacity: 1; }
+            60% { transform: translateY(-80px) scale(1); opacity: 1; }
+            100% { transform: translateY(-120px) scale(0.5); opacity: 0; }
+        }
+
+        /* Underwater fish */
+        .underwater-fish {
+            position: absolute;
+            font-size: 1.5em;
+            animation: swim 8s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes swim {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(calc(100vw + 100px)); }
+        }
+
+        /* Bubbles */
+        .bubble {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            animation: bubbleUp 3s ease-in infinite;
+        }
+
+        @keyframes bubbleUp {
+            0% { transform: translateY(0) scale(1); opacity: 0.5; }
+            100% { transform: translateY(-200px) scale(0.3); opacity: 0; }
+        }
+
+        /* HUD */
+        .hud {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            color: white;
+        }
+
+        .hud-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1em;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 15px;
+            border-radius: 25px;
+        }
+
+        .hud-item .icon {
+            font-size: 1.3em;
+        }
+
+        .timer {
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .timer.warning {
+            color: #FF4444;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .score-bar {
+            display: flex;
+            gap: 3px;
+            align-items: center;
+        }
+
+        .score-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: all 0.3s;
+        }
+
+        .score-dot.correct {
+            background: #4CAF50;
+            box-shadow: 0 0 5px #4CAF50;
+        }
+
+        .score-dot.wrong {
+            background: #F44336;
+            box-shadow: 0 0 5px #F44336;
+        }
+
+        /* Question Panel */
+        .question-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 700px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 25px;
+            z-index: 100;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .question-number {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .answers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .answer-btn {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .answer-btn:hover {
+            border-color: #4A90D9;
+            background: #f0f8ff;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(74,144,217,0.2);
+        }
+
+        .answer-btn.correct {
+            border-color: #4CAF50;
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .answer-btn.wrong {
+            border-color: #F44336;
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
+        .answer-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Feedback */
+        .feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3em;
+            z-index: 200;
+            animation: feedbackAnim 1.5s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes feedbackAnim {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            30% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+            70% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+        }
+
+        /* End Screen */
+        #endScreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        #endScreen.win {
+            background: linear-gradient(180deg, #1a237e 0%, #0d47a1 50%, #01579b 100%);
+        }
+
+        #endScreen.lose {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+
+        #endScreen.timeout {
+            background: linear-gradient(180deg, #2d2d2d 0%, #1a1a1a 100%);
+        }
+
+        #endScreen h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        #endScreen .result-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            animation: bounceIn 1s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        #endScreen .stats {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px 40px;
+            margin: 20px 0;
+            backdrop-filter: blur(5px);
+        }
+
+        #endScreen .stats p {
+            margin: 8px 0;
+            font-size: 1.1em;
+        }
+
+        .btn-restart {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .btn-restart:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(76,175,80,0.4);
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            top: -10px;
+            width: 10px;
+            height: 10px;
+            z-index: 1001;
+            animation: confettiFall 3s linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .answers {
+                grid-template-columns: 1fr;
+            }
+            .question-panel {
+                width: 95%;
+                padding: 15px;
+            }
+            .hud {
+                flex-wrap: wrap;
+                gap: 5px;
+                padding: 8px 10px;
+            }
+            .hud-item {
+                font-size: 0.8em;
+                padding: 5px 10px;
+            }
+            .score-bar {
+                display: none;
+            }
+            #startScreen h1 {
+                font-size: 1.8em;
+            }
+            .ship {
+                transform: scale(0.8);
+            }
+        }
+
+        /* Splash effect */
+        .splash {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.6);
+            animation: splashAnim 0.8s ease-out forwards;
+            z-index: 15;
+        }
+
+        @keyframes splashAnim {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Start Screen -->
+<div id="startScreen">
+    <h1>🎣 Memancing di Laut</h1>
+    <h2>Makhluk Hidup dan Lingkungannya</h2>
+    <div class="rules">
+        <h3>📋 Aturan Permainan</h3>
+        <ul>
+            <li>Jawab 25 pertanyaan seputar komponen biotik & abiotik</li>
+            <li>Jawaban <strong>benar</strong> = mendapat ikan 🐟</li>
+            <li>Jawaban <strong>salah</strong> = kapal terguncang 🌊</li>
+            <li>Semua benar = hadiah kapal besar 🚢</li>
+            <li>19+ jawaban salah = kapal tenggelam 💀</li>
+            <li>Waktu: <strong>15 menit</strong> ⏰</li>
+        </ul>
+    </div>
+    <button class="btn-start" onclick="startGame()">🚀 Mulai Memancing!</button>
+</div>
+
+<!-- Game Screen -->
+<div id="gameScreen">
+    <!-- Sky -->
+    <div class="sky">
+        <div class="sun"></div>
+        <div class="clouds"></div>
+        <div class="clouds2"></div>
+    </div>
+
+    <!-- Sea -->
+    <div class="sea">
+        <div class="wave"></div>
+        <div id="underwaterFish"></div>
+        <div id="bubbles"></div>
+    </div>
+
+    <!-- Ship -->
+    <div class="ship-container" id="shipContainer">
+        <div class="ship">
+            <div class="ship-flag"></div>
+            <div class="ship-mast"></div>
+            <div class="ship-cabin"></div>
+            <div class="ship-body"></div>
+            <div class="fishing-rod"></div>
+            <div class="fishing-line"></div>
+            <div class="fishing-hook"></div>
+        </div>
+    </div>
+
+    <!-- HUD -->
+    <div class="hud">
+        <div class="hud-item">
+            <span class="icon">⏰</span>
+            <span class="timer" id="timer">15:00</span>
+        </div>
+        <div class="hud-item">
+            <span class="icon">🐟</span>
+            <span id="fishCount">0</span> / 25
+        </div>
+        <div class="hud-item">
+            <span class="icon">❌</span>
+            <span id="wrongCount">0</span> / 19
+        </div>
+        <div class="hud-item score-bar" id="scoreBar"></div>
+    </div>
+
+    <!-- Question Panel -->
+    <div class="question-panel" id="questionPanel">
+        <div class="question-number" id="questionNumber">Pertanyaan 1 dari 25</div>
+        <div class="question-text" id="questionText">Loading...</div>
+        <div class="answers" id="answersContainer"></div>
+    </div>
+</div>
+
+<!-- End Screen -->
+<div id="endScreen">
+    <div class="result-icon" id="resultIcon"></div>
+    <h1 id="resultTitle"></h1>
+    <p id="resultMessage"></p>
+    <div class="stats" id="resultStats"></div>
+    <button class="btn-restart" onclick="restartGame()">🔄 Main Lagi</button>
+</div>
+
+<script>
+    // Questions Database - 25 questions about biotic and abiotic components
+    const questions = [
+        {
+            question: "Manakah yang merupakan komponen biotik dalam ekosistem laut?",
+            answers: ["Air laut", "Sinar matahari", "Ikan karang", "Pasir pantai"],
+            correct: 2
+        },
+        {
+            question: "Komponen abiotik berikut yang mempengaruhi distribusi makhluk hidup di laut adalah...",
+            answers: ["Ikan hiu", "Salinitas (kadar garam)", "Rumput laut", "Plankton"],
+            correct: 1
+        },
+        {
+            question: "Manakah yang BUKAN merupakan komponen abiotik?",
+            answers: ["Suhu air", "Bakteri pengurai", "Cahaya matahari", "Kelembaban udara"],
+            correct: 1
+        },
+        {
+            question: "Terumbu karang termasuk komponen biotik karena...",
+            answers: ["Berupa batu keras", "Dipengaruhi arus laut", "Merupakan makhluk hidup (hewan)", "Tersusun dari mineral"],
+            correct: 2
+        },
+        {
+            question: "Dalam ekosistem pantai, yang termasuk komponen abiotik adalah...",
+            answers: ["Kepiting", "Pohon kelapa", "Angin laut", "Burung camar"],
+            correct: 2
+        },
+        {
+            question: "Faktor abiotik yang paling mempengaruhi fotosintesis fitoplankton di laut adalah...",
+            answers: ["Kadar garam", "Intensitas cahaya matahari", "Jumlah predator", "Populasi ikan"],
+            correct: 1
+        },
+        {
+            question: "Manakah interaksi biotik-abiotik yang benar?",
+            answers: ["Ikan memakan plankton", "Pohon bakau menahan abrasi pantai", "Hiu memakan ikan kecil", "Ular memakan katak"],
+            correct: 1
+        },
+        {
+            question: "pH air laut termasuk komponen...",
+            answers: ["Biotik", "Abiotik", "Biotik dan abiotik", "Bukan komponen ekosistem"],
+            correct: 1
+        },
+        {
+            question: "Cacing laut yang hidup di dasar laut berperan sebagai...",
+            answers: ["Produsen", "Konsumen puncak", "Dekomposer (pengurai)", "Komponen abiotik"],
+            correct: 2
+        },
+        {
+            question: "Suhu air yang meningkat dapat menyebabkan pemutihan karang (coral bleaching). Ini menunjukkan hubungan antara...",
+            answers: ["Komponen biotik dengan biotik", "Komponen abiotik dengan biotik", "Komponen abiotik dengan abiotik", "Tidak ada hubungan"],
+            correct: 1
+        },
+        {
+            question: "Manakah yang merupakan produsen dalam ekosistem laut?",
+            answers: ["Ikan kecil", "Fitoplankton", "Udang", "Kepiting"],
+            correct: 1
+        },
+        {
+            question: "Oksigen terlarut dalam air laut termasuk komponen...",
+            answers: ["Biotik", "Abiotik", "Hayati", "Organisme"],
+            correct: 1
+        },
+        {
+            question: "Hubungan antara ikan badut dan anemon laut termasuk interaksi...",
+            answers: ["Abiotik-abiotik", "Biotik-abiotik", "Biotik-biotik", "Tidak saling mempengaruhi"],
+            correct: 2
+        },
+        {
+            question: "Tanah dan batuan di dasar laut termasuk komponen...",
+            answers: ["Biotik", "Abiotik", "Makhluk hidup", "Organisme produsen"],
+            correct: 1
+        },
+        {
+            question: "Mangrove (bakau) berperan dalam ekosistem pantai sebagai...",
+            answers: ["Konsumen tingkat 1", "Dekomposer", "Produsen dan pelindung pantai", "Komponen abiotik"],
+            correct: 2
+        },
+        {
+            question: "Arus laut yang membawa nutrien ke permukaan (upwelling) mendukung kehidupan plankton. Ini contoh pengaruh komponen...",
+            answers: ["Biotik terhadap biotik", "Abiotik terhadap biotik", "Biotik terhadap abiotik", "Abiotik terhadap abiotik"],
+            correct: 1
+        },
+        {
+            question: "Manakah yang bukan merupakan ciri komponen biotik?",
+            answers: ["Dapat bernapas", "Dapat berkembang biak", "Memiliki warna dan bentuk", "Dapat mengalami pelapukan"],
+            correct: 3
+        },
+        {
+            question: "Dalam rantai makanan laut: Fitoplankton → Zooplankton → Ikan kecil → Ikan besar. Yang berperan sebagai konsumen tingkat II adalah...",
+            answers: ["Fitoplankton", "Zooplankton", "Ikan kecil", "Ikan besar"],
+            correct: 2
+        },
+        {
+            question: "Curah hujan mempengaruhi ekosistem laut karena...",
+            answers: ["Membawa nutrien dari darat ke laut", "Membunuh ikan di laut", "Mengurangi kadar garam ikan", "Meningkatkan suhu tubuh ikan"],
+            correct: 0
+        },
+        {
+            question: "Jamur yang hidup di kayu mangrove yang membusuk berperan sebagai...",
+            answers: ["Produsen", "Konsumen primer", "Dekomposer", "Komponen abiotik"],
+            correct: 2
+        },
+        {
+            question: "Komponen abiotik manakah yang menentukan jenis organisme yang dapat hidup di laut dalam?",
+            answers: ["Jumlah predator", "Tekanan air dan ketiadaan cahaya", "Populasi plankton", "Jumlah algae"],
+            correct: 1
+        },
+        {
+            question: "Rumput laut (alga) dalam ekosistem laut berperan sebagai...",
+            answers: ["Konsumen", "Dekomposer", "Produsen", "Komponen abiotik"],
+            correct: 2
+        },
+        {
+            question: "Manakah pernyataan yang benar tentang hubungan komponen biotik dan abiotik?",
+            answers: ["Komponen biotik tidak dipengaruhi abiotik", "Komponen abiotik tidak dipengaruhi biotik", "Keduanya saling mempengaruhi dalam ekosistem", "Keduanya tidak memiliki hubungan"],
+            correct: 2
+        },
+        {
+            question: "Penambangan pasir pantai secara berlebihan dapat merusak ekosistem pantai. Hal ini menunjukkan aktivitas manusia (biotik) mempengaruhi komponen...",
+            answers: ["Biotik saja", "Abiotik saja", "Biotik dan abiotik", "Tidak mempengaruhi apapun"],
+            correct: 2
+        },
+        {
+            question: "Urutan yang tepat menunjukkan organisasi kehidupan dari terkecil ke terbesar adalah...",
+            answers: ["Ekosistem → Komunitas → Populasi → Individu", "Individu → Populasi → Komunitas → Ekosistem", "Populasi → Individu → Ekosistem → Komunitas", "Komunitas → Ekosistem → Individu → Populasi"],
+            correct: 1
+        }
+    ];
+
+    // Game State
+    let currentQuestion = 0;
+    let correctAnswers = 0;
+    let wrongAnswers = 0;
+    let timeLeft = 900; // 15 minutes in seconds
+    let timerInterval;
+    let gameActive = false;
+    let shuffledQuestions = [];
+
+    // Initialize score bar
+    function initScoreBar() {
+        const scoreBar = document.getElementById('scoreBar');
+        scoreBar.innerHTML = '';
+        for (let i = 0; i < 25; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'score-dot';
+            dot.id = `dot-${i}`;
+            scoreBar.appendChild(dot);
+        }
+    }
+
+    // Shuffle array
+    function shuffleArray(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    // Start Game
+    function startGame() {
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('gameScreen').style.display = 'block';
+        document.getElementById('endScreen').style.display = 'none';
+
+        currentQuestion = 0;
+        correctAnswers = 0;
+        wrongAnswers = 0;
+        timeLeft = 900;
+        gameActive = true;
+
+        shuffledQuestions = shuffleArray(questions);
+        initScoreBar();
+        createUnderwaterFish();
+        createBubbles();
+        loadQuestion();
+        startTimer();
+    }
+
+    // Timer
+    function startTimer() {
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            updateTimerDisplay();
+            if (timeLeft <= 0) {
+                endGame('timeout');
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        const timerEl = document.getElementById('timer');
+        timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        if (timeLeft <= 60) {
+            timerEl.classList.add('warning');
+        } else {
+            timerEl.classList.remove('warning');
+        }
+    }
+
+    // Load Question
+    function loadQuestion() {
+        if (currentQuestion >= 25) {
+            endGame('win');
+            return;
+        }
+
+        const q = shuffledQuestions[currentQuestion];
+        document.getElementById('questionNumber').textContent = `Pertanyaan ${currentQuestion + 1} dari 25`;
+        document.getElementById('questionText').textContent = q.question;
+
+        const answersContainer = document.getElementById('answersContainer');
+        answersContainer.innerHTML = '';
+
+        q.answers.forEach((answer, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'answer-btn';
+            btn.textContent = `${String.fromCharCode(65 + index)}. ${answer}`;
+            btn.onclick = () => selectAnswer(index);
+            answersContainer.appendChild(btn);
+        });
+
+        document.getElementById('fishCount').textContent = correctAnswers;
+        document.getElementById('wrongCount').textContent = wrongAnswers;
+    }
+
+    // Select Answer
+    function selectAnswer(index) {
+        if (!gameActive) return;
+
+        const q = shuffledQuestions[currentQuestion];
+        const buttons = document.querySelectorAll('.answer-btn');
+
+        // Disable all buttons
+        buttons.forEach(btn => btn.disabled = true);
+
+        // Highlight correct and wrong
+        buttons[q.correct].classList.add('correct');
+
+        if (index === q.correct) {
+            // Correct answer
+            correctAnswers++;
+            document.getElementById(`dot-${currentQuestion}`).classList.add('correct');
+            showFeedback('🐟 Benar!');
+            createFishAnimation();
+            createSplash();
+        } else {
+            // Wrong answer
+            wrongAnswers++;
+            buttons[index].classList.add('wrong');
+            document.getElementById(`dot-${currentQuestion}`).classList.add('wrong');
+            showFeedback('❌ Salah!');
+            shakeShip();
+
+            // Check if ship should sink (19+ wrong = 3/4 of 25)
+            if (wrongAnswers >= 19) {
+                setTimeout(() => endGame('sink'), 1500);
+                return;
+            }
+        }
+
+        document.getElementById('fishCount').textContent = correctAnswers;
+        document.getElementById('wrongCount').textContent = wrongAnswers;
+
+        // Next question after delay
+        setTimeout(() => {
+            currentQuestion++;
+            if (currentQuestion >= 25) {
+                if (correctAnswers === 25) {
+                    endGame('perfect');
+                } else {
+                    endGame('complete');
+                }
+            } else {
+                loadQuestion();
+            }
+        }, 1500);
+    }
+
+    // Ship Shake
+    function shakeShip() {
+        const ship = document.getElementById('shipContainer');
+        ship.classList.add('shake');
+        setTimeout(() => {
+            ship.classList.remove('shake');
+        }, 500);
+    }
+
+    // Fish Animation
+    function createFishAnimation() {
+        const fish = document.createElement('div');
+        fish.className = 'fish-caught';
+        const fishTypes = ['🐟', '🐠', '🐡', '🦈', '🦑', '🐙', '🦐', '🦞'];
+        fish.textContent = fishTypes[Math.floor(Math.random() * fishTypes.length)];
+        fish.style.left = `${45 + Math.random() * 10}%`;
+        fish.style.top = '45%';
+        document.getElementById('gameScreen').appendChild(fish);
+        setTimeout(() => fish.remove(), 1500);
+    }
+
+    // Splash Effect
+    function createSplash() {
+        const splash = document.createElement('div');
+        splash.className = 'splash';
+        splash.style.left = `${48 + Math.random() * 4}%`;
+        splash.style.top = '48%';
+        document.getElementById('gameScreen').appendChild(splash);
+        setTimeout(() => splash.remove(), 800);
+    }
+
+    // Feedback
+    function showFeedback(text) {
+        const feedback = document.createElement('div');
+        feedback.className = 'feedback';
+        feedback.textContent = text;
+        document.body.appendChild(feedback);
+        setTimeout(() => feedback.remove(), 1500);
+    }
+
+    // Underwater Fish
+    function createUnderwaterFish() {
+        const container = document.getElementById('underwaterFish');
+        container.innerHTML = '';
+        const fishEmojis = ['🐟', '🐠', '🐡', '🦈'];
+        for (let i = 0; i < 6; i++) {
+            const fish = document.createElement('div');
+            fish.className = 'underwater-fish';
+            fish.textContent = fishEmojis[Math.floor(Math.random() * fishEmojis.length)];
+            fish.style.top = `${20 + Math.random() * 60}%`;
+            fish.style.animationDelay = `${Math.random() * 8}s`;
+            fish.style.animationDuration = `${6 + Math.random() * 6}s`;
+            container.appendChild(fish);
+        }
+    }
+
+    // Bubbles
+    function createBubbles() {
+        const container = document.getElementById('bubbles');
+        container.innerHTML = '';
+        for (let i = 0; i < 8; i++) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.style.left = `${10 + Math.random() * 80}%`;
+            bubble.style.bottom = `${Math.random() * 30}%`;
+            bubble.style.animationDelay = `${Math.random() * 3}s`;
+            bubble.style.width = `${5 + Math.random() * 10}px`;
+            bubble.style.height = bubble.style.width;
+            container.appendChild(bubble);
+        }
+    }
+
+    // End Game
+    function endGame(result) {
+        gameActive = false;
+        clearInterval(timerInterval);
+
+        const endScreen = document.getElementById('endScreen');
+        const resultIcon = document.getElementById('resultIcon');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultMessage = document.getElementById('resultMessage');
+        const resultStats = document.getElementById('resultStats');
+
+        endScreen.style.display = 'flex';
+        document.getElementById('questionPanel').style.display = 'none';
+
+        const timeUsed = 900 - timeLeft;
+        const minutesUsed = Math.floor(timeUsed / 60);
+        const secondsUsed = timeUsed % 60;
+
+        switch(result) {
+            case 'perfect':
+                endScreen.className = 'win';
+                resultIcon.textContent = '🚢🏆';
+                resultTitle.textContent = 'SEMPURNA! Kamu Mendapat Kapal Besar!';
+                resultMessage.textContent = 'Selamat! Semua jawaban benar! Kamu mendapat hadiah kapal besar!';
+                createConfetti();
+                break;
+            case 'win':
+            case 'complete':
+                endScreen.className = 'win';
+                resultIcon.textContent = '🎉🐟';
+                resultTitle.textContent = 'Hebat! Memancing Selesai!';
+                resultMessage.textContent = `Kamu berhasil menangkap ${correctAnswers} ikan dari 25 pertanyaan!`;
+                if (correctAnswers >= 20) createConfetti();
+                break;
+            case 'sink':
+                endScreen.className = 'lose';
+                resultIcon.textContent = '🚢💀';
+                resultTitle.textContent = 'Kapal Tenggelam!';
+                resultMessage.textContent = 'Terlalu banyak jawaban salah! Kapal kamu tenggelam...';
+                // Sink animation
+                document.getElementById('shipContainer').classList.add('sink');
+                break;
+            case 'timeout':
+                endScreen.className = 'timeout';
+                resultIcon.textContent = '⏰';
+                resultTitle.textContent = 'Waktu Habis!';
+                resultMessage.textContent = 'Waktu 15 menit telah berakhir.';
+                break;
+        }
+
+        resultStats.innerHTML = `
+            <p>🐟 Jawaban Benar: <strong>${correctAnswers}</strong> / 25</p>
+            <p>❌ Jawaban Salah: <strong>${wrongAnswers}</strong> / 25</p>
+            <p>📊 Persentase: <strong>${Math.round(correctAnswers/25*100)}%</strong></p>
+            <p>⏱️ Waktu: <strong>${minutesUsed} menit ${secondsUsed} detik</strong></p>
+            <p>📝 Soal terjawab: <strong>${currentQuestion}</strong> / 25</p>
+        `;
+    }
+
+    // Confetti
+    function createConfetti() {
+        const colors = ['#FFD700', '#FF6347', '#4CAF50', '#2196F3', '#FF9800', '#E91E63'];
+        for (let i = 0; i < 50; i++) {
+            setTimeout(() => {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = `${2 + Math.random() * 2}s`;
+                confetti.style.width = `${5 + Math.random() * 10}px`;
+                confetti.style.height = `${5 + Math.random() * 10}px`;
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 4000);
+            }, i * 50);
+        }
+    }
+
+    // Restart
+    function restartGame() {
+        document.getElementById('endScreen').style.display = 'none';
+        document.getElementById('endScreen').className = '';
+        document.getElementById('gameScreen').style.display = 'none';
+        document.getElementById('questionPanel').style.display = 'block';
+        document.getElementById('shipContainer').className = 'ship-container';
+        document.getElementById('startScreen').style.display = 'flex';
+    }
+</script>
+
+</body>
+</html>
